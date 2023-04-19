@@ -19,7 +19,6 @@ import org.springframework.security.access.annotation.Secured;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
 import javax.validation.Valid;
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -28,12 +27,12 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/api")
 @CrossOrigin(origins = {"http://localhost:4200"})
+@RequestMapping("/api")
 public class ClienteControlador {
 
     @Autowired
-    ClienteServicioImpl clienteServicio;
+    private ClienteServicioImpl clienteServicio;
     @Autowired
     private UploadFileServicioImpl uploadFileServicio;
 
@@ -54,6 +53,7 @@ public class ClienteControlador {
     //@Secured({"ROLE_USER","ROLE_ADMIN"})
     @GetMapping("/clientes/{id}")
     public ResponseEntity<?> show(@PathVariable Long id){
+
         Cliente cliente;
         Map<String, Object> response = new HashMap<>();
 
@@ -69,6 +69,7 @@ public class ClienteControlador {
             return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
         }
         return new ResponseEntity<>(cliente, HttpStatus.OK);
+
     }
 
 
@@ -78,6 +79,7 @@ public class ClienteControlador {
     @Secured("ROLE_ADMIN")
     @PostMapping("/clientes")
     public ResponseEntity<?> create(@Valid @RequestBody Cliente cliente, BindingResult result){
+
         Cliente clienteNew;
         Map<String, Object> response = new HashMap<>();
 
@@ -98,24 +100,31 @@ public class ClienteControlador {
 
             response.put("errors", errores);
             return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+
         }
 
         try {
+
             clienteNew = clienteServicio.save(cliente);
+
         }catch (DataAccessException e){
+
             response.put("mensaje", "Error al ingresar el cliente en la base de datos");
             response.put("error", e.getMessage().concat(": ").concat(e.getMostSpecificCause().getMessage()));
             return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+
         }
 
         response.put("mensaje", "El cliente ha sido ingresado con éxito");
         response.put("cliente", clienteNew);
         return new ResponseEntity<>(response, HttpStatus.CREATED);
+
     }
 
     @Secured("ROLE_ADMIN")
     @PutMapping("/clientes/{id}")
     public ResponseEntity<?> update(@Valid @RequestBody Cliente cliente, BindingResult result, @PathVariable Long id){
+
         Cliente clienteActual = clienteServicio.findById(id);
         Map<String, Object> response = new HashMap<>();
         Cliente clienteActualizado;
@@ -128,11 +137,14 @@ public class ClienteControlador {
 
             response.put("errors", errores);
             return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+
         }
 
         if (clienteActual == null){
+
             response.put("mensaje", "Error: No se pudo editar, el cliente ID: ".concat(id.toString()).concat(" No existe en la base de datos"));
             return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+
         }
 
         try {
@@ -146,14 +158,17 @@ public class ClienteControlador {
             clienteActualizado = clienteServicio.save(clienteActual);
 
         }catch (DataAccessException e){
+
             response.put("mensaje", "Error al actualizar el cliente en la base de datos");
             response.put("error", e.getMessage().concat(": ").concat(e.getMostSpecificCause().getMessage()));
             return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+
         }
 
         response.put("mensaje", "El cliente ha sido actualizado con éxito");
         response.put("cliente", clienteActualizado);
         return new ResponseEntity<>(response, HttpStatus.CREATED);
+
     }
 
     @Secured("ROLE_ADMIN")
@@ -163,51 +178,59 @@ public class ClienteControlador {
         Map<String, Object> response = new HashMap<>();
 
         try {
+
             Cliente cliente = clienteServicio.findById(id);
             String nombreFotoAnterior = cliente.getFoto();
 
             uploadFileServicio.eliminar(nombreFotoAnterior);
 
             clienteServicio.delete(id);
+
         }catch (DataAccessException e){
+
             response.put("mensaje", "Error al eliminar el cliente en la base de datos");
             response.put("error", e.getMessage().concat(": ").concat(e.getMostSpecificCause().getMessage()));
             return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+
         }
 
         response.put("mensaje", "El cliente fue eliminado con éxito!");
 
         return new ResponseEntity<>(response, HttpStatus.OK);
+
     }
 
     @Secured({"ROLE_USER","ROLE_ADMIN"})
     @PostMapping("/clientes/upload")
     public ResponseEntity<?> upload(@RequestParam("archivo") MultipartFile archivo, @RequestParam("id") Long id){
+
         Map<String, Object> response = new HashMap<>();
         Cliente cliente = clienteServicio.findById(id);
-
 
         if (!archivo.isEmpty()){
 
             String nombreArchivo;
 
             try{
+
                 nombreArchivo = uploadFileServicio.copiar(archivo);
+
             }catch (IOException e){
+
                 response.put("mensaje", "Error al subir la imagen del cliente");
                 response.put("error", e.getMessage().concat(": ").concat(e.getCause().getMessage()));
                 return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+
             }
 
             String nombreFotoAnterior = cliente.getFoto();
-
             uploadFileServicio.eliminar(nombreFotoAnterior);
-
             cliente.setFoto(nombreArchivo);
             clienteServicio.save(cliente);
 
             response.put("cliente", cliente);
             response.put("mensaje", "La imagen se ha subido correctamente");
+
         }
 
         return new ResponseEntity<>(response, HttpStatus.CREATED);
@@ -221,15 +244,20 @@ public class ClienteControlador {
         Resource recurso;
 
         try {
+
             recurso= uploadFileServicio.cargar(nombreFoto);
+
         } catch (MalformedURLException e) {
+
             throw new RuntimeException("Error al cargar la imagen");
+
         }
 
         HttpHeaders cabecera = new HttpHeaders();
         cabecera.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + recurso.getFilename() + "\"");
 
         return new ResponseEntity<Resource>(recurso, cabecera, HttpStatus.OK);
+
     }
 
 

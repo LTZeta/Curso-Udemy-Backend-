@@ -51,4 +51,5 @@ public class Factura implements Serializable {
         }
         return total;
     }
+
 }
