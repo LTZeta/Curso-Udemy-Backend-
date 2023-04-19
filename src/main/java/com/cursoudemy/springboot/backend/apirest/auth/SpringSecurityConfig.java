@@ -26,13 +26,17 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     public void configure(AuthenticationManagerBuilder auth) throws Exception {
+
             auth.userDetailsService(this.usuarioService).passwordEncoder(passwordEncoder());
+
     }
 
     @Bean("authenticationManager")
     @Override
     protected AuthenticationManager authenticationManager() throws Exception {
-        return super.authenticationManager();
-    }
-}
 
+        return super.authenticationManager();
+
+    }
+
+}

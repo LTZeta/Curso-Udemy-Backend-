@@ -6,7 +6,6 @@ import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -20,9 +19,12 @@ import java.util.UUID;
 public class UploadFileServicioImpl implements UploadFileServicioInterfaz{
 
     private final Logger log = LoggerFactory.getLogger(UploadFileServicioImpl.class);
+
     private final static String DIRECTORIO_UPLOADS = "uploads";
+
     @Override
     public Resource cargar(String nombreFoto) throws MalformedURLException {
+
         Path rutaArchivo = getPath(nombreFoto);
 
         Resource recurso = new UrlResource(rutaArchivo.toUri());
@@ -36,6 +38,7 @@ public class UploadFileServicioImpl implements UploadFileServicioInterfaz{
         }
 
         return recurso;
+
     }
 
     @Override
@@ -50,6 +53,7 @@ public class UploadFileServicioImpl implements UploadFileServicioInterfaz{
 
 
         return nombreArchivo;
+
     }
 
     @Override
@@ -67,6 +71,9 @@ public class UploadFileServicioImpl implements UploadFileServicioInterfaz{
 
     @Override
     public Path getPath(String nombreFoto) {
+
         return Paths.get(DIRECTORIO_UPLOADS).resolve(nombreFoto).toAbsolutePath();
+
     }
+
 }

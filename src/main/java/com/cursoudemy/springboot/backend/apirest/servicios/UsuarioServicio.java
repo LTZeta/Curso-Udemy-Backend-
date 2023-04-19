@@ -13,7 +13,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -40,11 +39,16 @@ public class UsuarioServicio implements UsuarioServicioInterfaz, UserDetailsServ
                 .stream()
                 .map(role -> new SimpleGrantedAuthority(role.getNombre())).peek(autorithy -> log.info("Role: " + autorithy.getAuthority()))
                 .collect(Collectors.toList());
+
         return new User(user.getUsername(), user.getPassword(), user.getEnabled(), true, true, true, authorities);
+
     }
+
 
     @Override
     public Usuario findByUsername(String username) {
+
         return usuarioRepositorio.findByUsername(username);
+
     }
 }
