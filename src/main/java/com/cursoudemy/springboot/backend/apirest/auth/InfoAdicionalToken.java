@@ -1,7 +1,7 @@
 package com.cursoudemy.springboot.backend.apirest.auth;
 
 import com.cursoudemy.springboot.backend.apirest.entidades.Usuario;
-import com.cursoudemy.springboot.backend.apirest.servicios.UsuarioServicioInterfaz;
+import com.cursoudemy.springboot.backend.apirest.servicios.UsuarioServicio;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.oauth2.common.DefaultOAuth2AccessToken;
 import org.springframework.security.oauth2.common.OAuth2AccessToken;
@@ -16,7 +16,7 @@ import java.util.Map;
 public class InfoAdicionalToken implements TokenEnhancer {
 
     @Autowired
-    private UsuarioServicioInterfaz usuarioServicio;
+    private UsuarioServicio usuarioServicio;
 
     @Override
     public OAuth2AccessToken enhance(OAuth2AccessToken oAuth2AccessToken, OAuth2Authentication oAuth2Authentication) {

@@ -6,7 +6,7 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.nio.file.Path;
 
-public interface UploadFileServicioInterfaz {
+public interface UploadFileServicio {
 
     public Resource cargar(String nombreFoto) throws MalformedURLException;
 

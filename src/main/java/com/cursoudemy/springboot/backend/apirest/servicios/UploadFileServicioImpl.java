@@ -16,7 +16,7 @@ import java.util.UUID;
 
 
 @Service
-public class UploadFileServicioImpl implements UploadFileServicioInterfaz{
+public class UploadFileServicioImpl implements UploadFileServicio {
 
     private final Logger log = LoggerFactory.getLogger(UploadFileServicioImpl.class);
 
