@@ -77,7 +77,7 @@ public class ClienteServicioImpl implements ClienteServicio {
     @Override
     @Transactional
     public List<Producto> findProductoByNombre(String term) {
-        return productoRepositorio.findByNombreContainingIgnoreCase(term);
+        return productoRepositorio.findByNombreStartingWithIgnoreCase(term);
     }
 
 }
